@@ -68,52 +68,19 @@ sequenceDiagram
 
 ## List of Completed Bonus Tasks
 
-### ✅ Core Requirements
+### ✅ Bonus Tasks
 
 **1. Asynchronous Processing**
-- Converted `ProcessOrder` to `ProcessOrderAsync` returning `Task`
-- Added `Task.Delay(100)` in repository to simulate real async work
-- Implemented `await` and `Task.WhenAll` in Main for parallel execution
+- Changed `ProcessOrder` to `ProcessOrderAsync(int orderId)` returning `Task`
+- Simulated delay in repository with `Task.Delay(100)` to mimic real async work
+- Used `await` and `Task.WhenAll` in Main for parallel execution
 - All async operations properly awaited throughout the call chain
 
 **2. Add Order (CRUD)**
 - Added `AddOrderAsync(Order order)` method to `IOrderRepository`
-- Implemented thread-safe insertion using `ConcurrentDictionary.TryAdd`
-- Duplicate orders are rejected with `InvalidOperationException`
-- Called from a separate `Task` in Main to demonstrate concurrent operations
-
-**3. Thread-Safe In-Memory Repository**
-- Used `ConcurrentDictionary<int, Order>` for thread-safe operations
-- Pre-loaded two sample orders: ID 1 → "Laptop", ID 2 → "Phone"
-- Proper exception handling:
-  - `ArgumentException` thrown for `orderId <= 0`
-  - `KeyNotFoundException` thrown when order not found
-- All read/write operations are thread-safe
-
-**4. OrderService Implementation**
-- Injected `IOrderRepository` and `ILogger` via constructor (plus validator and notification service)
-- In `ProcessOrderAsync`:
-  - Logs the start of processing
-  - Calls repository to fetch order
-  - Logs success with product name
-  - Catches and logs any exceptions that occur
-
-**5. Dependency Injection Container**
-- Created `ServiceContainer` class with `Build()` method
-- All services registered as singletons
-- All dependencies injected via constructor - no `new` keywords in service classes
-- Clean separation of concerns with interface-based design
-
-**6. Complete Main Method**
-- Uses DI container to resolve services
-- Runs 3 parallel tasks using `Task.WhenAll`:
-  - Process order 1 (valid)
-  - Process order 2 (valid)
-  - Process invalid order (-1)
-- Additional task for adding new order (ID 3, "Tablet")
-- Logs final message: "All orders processed."
-
-### ✅ Bonus Tasks
+- Ensured thread-safe insert using `ConcurrentDictionary.TryAdd`
+- Rejects duplicates with `InvalidOperationException`
+- Called from a new `Task` in Main to demonstrate concurrent operations
 
 **3. IOrderValidator**
 - Created `IOrderValidator` interface with `bool IsValid(int orderId)` method
@@ -123,7 +90,7 @@ sequenceDiagram
 
 **4. Unit Tests**
 - Added xUnit test project `OrderProcessing.Tests`
-- Written 3 comprehensive tests:
+- Written 3+ comprehensive tests:
   - **Happy Path**: Valid order ID processes successfully, calls repository and notification
   - **Invalid ID**: Invalid order ID doesn't call repository, logs error
   - **Not Found**: `KeyNotFoundException` is caught and logged properly
